@@ -20,7 +20,7 @@ jobs:
     uses: ./.github/workflows/front-end-workflow.yml
     with:
       system-dir: pakiPARK-Web
-      sonar-project-key: "implementsprint_pakipark-web"
+      sonar-project-key: "ImplementSprint_megamart-ecommerce2"
     secrets: inherit
 
   # ╔══════════════════════════════════════════════════════════════╗
@@ -32,7 +32,7 @@ jobs:
     uses: ./.github/workflows/front-end-workflow.yml
     with:
       system-dir: pakiSHIP-Web
-      sonar-project-key: "implementsprint_pakipark-web"
+      sonar-project-key: "ImplementSprint_megamart-ecommerce2"
     secrets: inherit
 
   # ╔══════════════════════════════════════════════════════════════╗
@@ -44,7 +44,7 @@ jobs:
     uses: ./.github/workflows/mobile-workflow.yml
     with:
       system-dir: pakiPARK-Mobile
-      sonar-project-key: "implementsprint_pakipark-web"
+      sonar-project-key: "ImplementSprint_megamart-ecommerce2"
     secrets: inherit
 
   # ╔══════════════════════════════════════════════════════════════╗
@@ -56,7 +56,7 @@ jobs:
     uses: ./.github/workflows/mobile-workflow.yml
     with:
       system-dir: pakiSHIP-Mobile
-      sonar-project-key: "implementsprint_pakipark-web"
+      sonar-project-key: "ImplementSprint_megamart-ecommerce2"
     secrets: inherit
 
   # ╔══════════════════════════════════════════════════════════════╗
