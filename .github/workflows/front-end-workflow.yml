@@ -7,11 +7,6 @@ on:
         required: true
         type: string
         description: 'Project directory name (e.g. pakiPARK-Web)'
-      sonar-project-key:
-        required: false
-        type: string
-        default: ''
-        description: 'SonarCloud project key'
       sonar-organization:
         required: false
         type: string
@@ -22,6 +17,11 @@ on:
         type: number
         default: 80
         description: 'Minimum code coverage percentage'
+    secrets:
+      SONAR_TOKEN:
+        required: false
+      SONAR_PROJECT_KEY:
+        required: false
 
 jobs:
   # ── Stage 1: Governance Checks ──────────────────────────────────
@@ -69,7 +69,7 @@ jobs:
   web-sonarcloud:
     name: Web — SonarCloud Analysis
     needs: web-governance
-    if: ${{ inputs.sonar-project-key != '' }}
+    if: ${{ secrets.SONAR_PROJECT_KEY != '' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -92,7 +92,7 @@ jobs:
           projectBaseDir: ${{ inputs.system-dir }}
           args: >
             -Dsonar.organization=${{ inputs.sonar-organization }}
-            -Dsonar.projectKey=${{ inputs.sonar-project-key }}
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
             -Dsonar.sources=src
             -Dsonar.tests=src
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
