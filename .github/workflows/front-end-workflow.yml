@@ -69,7 +69,6 @@ jobs:
   web-sonarcloud:
     name: Web — SonarCloud Analysis
     needs: web-governance
-    if: ${{ secrets.SONAR_PROJECT_KEY != '' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code

@@ -81,7 +81,6 @@ jobs:
   mobile-sonarcloud:
     name: Mobile — SonarCloud Analysis
     needs: mobile-governance
-    if: ${{ secrets.SONAR_PROJECT_KEY != '' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
