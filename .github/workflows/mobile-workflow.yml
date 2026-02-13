@@ -8,8 +8,9 @@ on:
         type: string
         description: 'Project directory name (e.g. pakiPARK-Mobile)'
       sonar-project-key:
-        required: true
+        required: false
         type: string
+        default: ''
         description: 'SonarCloud project key'
       sonar-organization:
         required: false
@@ -80,6 +81,7 @@ jobs:
   mobile-sonarcloud:
     name: Mobile — SonarCloud Analysis
     needs: mobile-governance
+    if: ${{ inputs.sonar-project-key != '' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
