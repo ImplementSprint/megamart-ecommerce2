@@ -70,6 +70,9 @@ jobs:
     name: Staging — pakiPARK-Web
     needs: [pakipark-web, pakiship-web, pakipark-mobile, pakiship-mobile]
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    permissions:
+      contents: read
+      packages: write
     uses: ./.github/workflows/deploy-staging.yml
     with:
       system-dir: pakiPARK-Web
@@ -81,6 +84,9 @@ jobs:
     name: Staging — pakiSHIP-Web
     needs: deploy-staging-pakipark-web
     if: ${{ !cancelled() && !failure() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') }}
+    permissions:
+      contents: read
+      packages: write
     uses: ./.github/workflows/deploy-staging.yml
     with:
       system-dir: pakiSHIP-Web
@@ -92,6 +98,9 @@ jobs:
     name: Staging — pakiPARK-Mobile
     needs: deploy-staging-pakiship-web
     if: ${{ !cancelled() && !failure() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') }}
+    permissions:
+      contents: read
+      packages: write
     uses: ./.github/workflows/deploy-staging.yml
     with:
       system-dir: pakiPARK-Mobile
@@ -103,6 +112,9 @@ jobs:
     name: Staging — pakiSHIP-Mobile
     needs: deploy-staging-pakipark-mobile
     if: ${{ !cancelled() && !failure() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') }}
+    permissions:
+      contents: read
+      packages: write
     uses: ./.github/workflows/deploy-staging.yml
     with:
       system-dir: pakiSHIP-Mobile
