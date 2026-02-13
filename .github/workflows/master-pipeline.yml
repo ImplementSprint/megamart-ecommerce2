@@ -29,7 +29,6 @@ jobs:
   # ╚══════════════════════════════════════════════════════════════╝
   pakiship-web:
     name: pakiSHIP-Web Pipeline
-    needs: pakipark-web
     uses: ./.github/workflows/front-end-workflow.yml
     with:
       system-dir: pakiSHIP-Web
@@ -42,7 +41,6 @@ jobs:
   # ╚══════════════════════════════════════════════════════════════╝
   pakipark-mobile:
     name: pakiPARK-Mobile Pipeline
-    needs: pakiship-web
     uses: ./.github/workflows/mobile-workflow.yml
     with:
       system-dir: pakiPARK-Mobile
@@ -55,7 +53,6 @@ jobs:
   # ╚══════════════════════════════════════════════════════════════╝
   pakiship-mobile:
     name: pakiSHIP-Mobile Pipeline
-    needs: pakipark-mobile
     uses: ./.github/workflows/mobile-workflow.yml
     with:
       system-dir: pakiSHIP-Mobile
@@ -68,7 +65,7 @@ jobs:
   # ╚══════════════════════════════════════════════════════════════╝
   deploy-staging-pakipark-web:
     name: Staging — pakiPARK-Web
-    needs: [pakipark-web, pakiship-web, pakipark-mobile, pakiship-mobile]
+    needs: pakipark-web
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
     permissions:
       contents: read
@@ -82,8 +79,8 @@ jobs:
 
   deploy-staging-pakiship-web:
     name: Staging — pakiSHIP-Web
-    needs: deploy-staging-pakipark-web
-    if: ${{ !cancelled() && !failure() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') }}
+    needs: pakiship-web
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
     permissions:
       contents: read
       packages: write
@@ -96,8 +93,8 @@ jobs:
 
   deploy-staging-pakipark-mobile:
     name: Staging — pakiPARK-Mobile
-    needs: deploy-staging-pakiship-web
-    if: ${{ !cancelled() && !failure() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') }}
+    needs: pakipark-mobile
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
     permissions:
       contents: read
       packages: write
@@ -110,8 +107,8 @@ jobs:
 
   deploy-staging-pakiship-mobile:
     name: Staging — pakiSHIP-Mobile
-    needs: deploy-staging-pakipark-mobile
-    if: ${{ !cancelled() && !failure() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') }}
+    needs: pakiship-mobile
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
     permissions:
       contents: read
       packages: write
