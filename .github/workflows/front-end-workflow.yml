@@ -22,6 +22,8 @@ on:
         required: true
       SONAR_PROJECT_KEY:
         required: true
+      SONAR_ORGANIZATION:
+        required: false
 
 jobs:
   # ── Stage 1: Governance Checks ──────────────────────────────────
@@ -86,7 +88,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
-          SONAR_ORGANIZATION: ${{ inputs.sonar-organization }}
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION || inputs.sonar-organization }}
         run: |
           set -euo pipefail
 
@@ -126,7 +128,7 @@ jobs:
           projectBaseDir: ${{ inputs.system-dir }}
           args: >
             -Dsonar.host.url=https://sonarcloud.io
-            -Dsonar.organization=${{ inputs.sonar-organization }}
+            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION || inputs.sonar-organization }}
             -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
             -Dsonar.sources=src
             -Dsonar.tests=src
