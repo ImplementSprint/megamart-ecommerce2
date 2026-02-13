@@ -19,9 +19,9 @@ on:
         description: 'Minimum code coverage percentage'
     secrets:
       SONAR_TOKEN:
-        required: false
+        required: true
       SONAR_PROJECT_KEY:
-        required: false
+        required: true
 
 jobs:
   # ── Stage 1: Governance Checks ──────────────────────────────────
@@ -82,6 +82,41 @@ jobs:
           name: ${{ inputs.system-dir }}-coverage
           path: ${{ inputs.system-dir }}/coverage
 
+      - name: Validate SonarCloud Configuration
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+          SONAR_ORGANIZATION: ${{ inputs.sonar-organization }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${SONAR_TOKEN:-}" ]; then
+            echo "::error::SONAR_TOKEN is missing. Add it in repository or organization secrets."
+            exit 1
+          fi
+
+          if [ -z "${SONAR_PROJECT_KEY:-}" ]; then
+            echo "::error::SONAR_PROJECT_KEY is missing. Add it in repository or organization secrets."
+            exit 1
+          fi
+
+          echo "Checking SonarCloud project '${SONAR_PROJECT_KEY}' in organization '${SONAR_ORGANIZATION}'..."
+          STATUS_CODE=$(curl -sS -o sonar-project-check.json -w "%{http_code}" -u "${SONAR_TOKEN}:" "https://sonarcloud.io/api/projects/search?organization=${SONAR_ORGANIZATION}&projects=${SONAR_PROJECT_KEY}")
+
+          if [ "${STATUS_CODE}" != "200" ]; then
+            echo "::error::SonarCloud preflight failed (HTTP ${STATUS_CODE}). Verify SONAR_TOKEN permissions and organization/project values."
+            cat sonar-project-check.json
+            exit 1
+          fi
+
+          if ! grep -q '"key":"'"${SONAR_PROJECT_KEY}"'"' sonar-project-check.json; then
+            echo "::error::Project '${SONAR_PROJECT_KEY}' was not found under organization '${SONAR_ORGANIZATION}'."
+            cat sonar-project-check.json
+            exit 1
+          fi
+
+          echo "SonarCloud preflight passed."
+
       - name: Run SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v5.0.0
         env:
@@ -90,6 +125,7 @@ jobs:
         with:
           projectBaseDir: ${{ inputs.system-dir }}
           args: >
+            -Dsonar.host.url=https://sonarcloud.io
             -Dsonar.organization=${{ inputs.sonar-organization }}
             -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
             -Dsonar.sources=src
