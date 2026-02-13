@@ -26,7 +26,6 @@ export const UserLogin = () => {
     }
     if (!isLoading && !isSuccess && resError) {
         setError(resError.data?.message);
-        console.log(resError)
     }
   }, [isLoading, isSuccess, navigate, resError]);
 

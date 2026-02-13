@@ -81,9 +81,7 @@ export const productApi = apiSlice.injectEndpoints({
             apiSlice.util.updateQueryData(
               "getProduct",
               arg.productId,
-              (draft) => {
-                // console.log(JSON.stringify(draft));
-              }
+              () => {}
             )
           );
         } catch (err) {}
